@@ -33,5 +33,37 @@
                 }
             }
         }
+        >article{
+            >h1{
+                font-size: 1.8rem;
+                text-transform: uppercase;
+                letter-spacing: 5px;
+                margin: 2rem 0;
+
+            }
+            >div{
+                background-color: rgba(240,240,240);
+                margin: 1rem;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 1rem;
+            }
+        }
+    }
+}
+
+@media screen and (max-width:600px) {
+    .orderDetails{
+        >main >div{
+            >h1{
+                font-size: 1.4rem;
+            }
+            >p{
+                letter-spacing: 1px;
+                font-size: 1rem;
+                margin: 1rem 0;
+            }
+        }
     }
 }
