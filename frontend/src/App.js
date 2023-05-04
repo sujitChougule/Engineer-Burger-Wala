@@ -14,6 +14,8 @@ import OrderDetails from './components/myOrder/OrderDetails.jsx'
 import Dashboard from './components/admin/Dashboard';
 import Users from './components/admin/Users';
 import Orders from './components/admin/Orders';
+import About from './components/about/About';
+
 
 import './styles/app.scss';
 import './styles/header.scss';
@@ -32,6 +34,8 @@ import './styles/table.scss'
 import './styles/orderDetails.scss'
 import './styles/dashboard.scss'
 import './styles/users.scss'
+import './styles/about.scss'
+
 
 function App() {
   return (
@@ -51,6 +55,8 @@ function App() {
         <Route path='/admin/dashboard' element={<Dashboard/>}/>
         <Route path='/admin/users' element={<Users/>}/>
         <Route path='/admin/orders' element={<Orders/>}/>
+        <Route path='/about' element={<About/>}/>
+
       </Routes>
       <Footer/>
     </Router> 
