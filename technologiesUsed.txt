@@ -1,0 +1,6 @@
+dotenv for env files
+cookie-parser to access cookie
+express-session to store cookie 
+express
+mongoose db
+passport passport-google-oauth20 for google authentication 
