@@ -5,4 +5,12 @@ export const isAuthenticated=(req,res,next)=>{
         return next(new ErrorHandler("login first",404));
     }
     next();
+};
+
+export const autherizedAdmin=(req,res,next)=>{
+    
+    if(req.user.role!=="admin"){
+        return next(new ErrorHandler("only admin allowed",405));
+    }
+    next();
 }
