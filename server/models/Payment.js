@@ -17,3 +17,5 @@ const schema= new mongoose.Schema({
         default:Date.now
     }
 });
+
+export const Payment = mongoose.model("Payment", schema);
