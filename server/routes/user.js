@@ -1,6 +1,6 @@
 import express, { Router } from 'express'
 import passport, { Passport } from 'passport'
-import { getAdminUsers, logout, myProfile } from '../controllers/user.js';
+import { getAdminStats, getAdminUsers, logout, myProfile } from '../controllers/user.js';
 import { autherizedAdmin, isAuthenticated } from '../middlewares/auth.js';
 
 const router =express.Router();
@@ -18,7 +18,7 @@ router.get('/logout',logout);
 
 //for admins only
 
-router.get('/admin/users',isAuthenticated,autherizedAdmin,getAdminUsers)
-
+router.get('/admin/users',isAuthenticated,autherizedAdmin,getAdminUsers);
+router.get('/admin/stats',isAuthenticated,autherizedAdmin,getAdminStats);
 
 export default router;
