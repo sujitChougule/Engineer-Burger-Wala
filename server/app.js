@@ -20,6 +20,11 @@ app.use(
     secret: process.env.SESSION_SECRETE,
     resave: false,
     saveUninitialized: false,
+    cookie: {
+      secure: process.env.NODE_ENV === "development" ? false : true,
+      httpOnly: process.env.NODE_ENV === "development" ? false : true,
+      sameSite: process.env.NODE_ENV === "development" ? false : "none",
+    },
   })
 );
 
@@ -43,7 +48,7 @@ app.use(
 app.use(passport.authenticate("session"));
 app.use(passport.initialize());
 app.use(passport.session());
-
+app.enable("trust proxy");
 connectPassport();
 
 //importing routes
