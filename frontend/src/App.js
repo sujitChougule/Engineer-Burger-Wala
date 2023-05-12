@@ -41,7 +41,7 @@ import { loadUser } from "./redux/actions/user";
 
 function App() {
   const dispatch = useDispatch();
-  const { error, message, user, isAuthenticated } = useSelector(
+  const { error, message, isAuthenticated } = useSelector(
     (state) => state.auth
   );
   useEffect(() => {
@@ -55,11 +55,17 @@ function App() {
         type: "clearError",
       });
     }
+    if (message) {
+      toast.success(message);
+      dispatch({
+        type: "clearMessage",
+      });
+    }
   }, [dispatch, error]);
 
   return (
     <Router>
-      <Header isAuthenticated={true} />
+      <Header isAuthenticated={isAuthenticated} />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/contact" element={<Contact />} />
