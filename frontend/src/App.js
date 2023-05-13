@@ -19,6 +19,9 @@ import NotFound from "./components/layout/NotFound";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import toast, { Toaster } from "react-hot-toast";
+import { loadUser } from "./redux/actions/user";
+import { ProtectedRoute } from "protected-route-react";
+
 import "./styles/app.scss";
 import "./styles/header.scss";
 import "./styles/home.scss";
@@ -37,11 +40,10 @@ import "./styles/orderDetails.scss";
 import "./styles/dashboard.scss";
 import "./styles/users.scss";
 import "./styles/about.scss";
-import { loadUser } from "./redux/actions/user";
 
 function App() {
   const dispatch = useDispatch();
-  const { error, message, isAuthenticated } = useSelector(
+  const { error, message, isAuthenticated, user } = useSelector(
     (state) => state.auth
   );
   useEffect(() => {
@@ -61,7 +63,7 @@ function App() {
         type: "clearMessage",
       });
     }
-  }, [dispatch, error]);
+  }, [dispatch, error, message]);
 
   return (
     <Router>
@@ -70,18 +72,40 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/cart" element={<Cart />} />
-        <Route path="/shipping" element={<Shipping />} />
-        <Route path="/confirmorder" element={<ConfirmOrder />} />
-        <Route path="/paymentsuccessfull" element={<PaymentSuccessfull />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/me" element={<Profile />} />
-        <Route path="/myorders" element={<MyOrders />} />
-        <Route path="/order/:id" element={<OrderDetails />} />
-        <Route path="/admin/dashboard" element={<Dashboard />} />
-        <Route path="/admin/users" element={<Users />} />
-        <Route path="/admin/orders" element={<Orders />} />
         <Route path="/about" element={<About />} />
 
+        <Route
+          path="/login"
+          element={
+            <ProtectedRoute isAuthenticated={!isAuthenticated} redirect={"/me"}>
+              <Login />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route element={<ProtectedRoute isAuthenticated={isAuthenticated} />}>
+          <Route path="/me" element={<Profile />} />
+          <Route path="/shipping" element={<Shipping />} />
+          <Route path="/confirmorder" element={<ConfirmOrder />} />
+          <Route path="/myorders" element={<MyOrders />} />
+          <Route path="/order/:id" element={<OrderDetails />} />
+          <Route path="/paymentsuccessfull" element={<PaymentSuccessfull />} />
+        </Route>
+
+        <Route
+          element={
+            <ProtectedRoute
+              isAuthenticated={isAuthenticated}
+              adminRoute={true}
+              isAdmin={user && user.role === "admin"}
+              redirectAdmin={"/me"}
+            />
+          }
+        >
+          <Route path="/admin/dashboard" element={<Dashboard />} />
+          <Route path="/admin/users" element={<Users />} />
+          <Route path="/admin/orders" element={<Orders />} />
+        </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
