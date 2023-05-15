@@ -74,6 +74,16 @@ export const cartReducer = createReducer(intialReducer, {
     state.shippingCharges = 0;
     state.total = 0;
   },
+  addShippinginfo: (state, action) => {
+    state.shippingInfo = {
+      hNo: action.payload.hNO,
+      city: action.payload.city,
+      state: action.payload.state,
+      country: action.payload.country,
+      pinCode: action.payload.pinCode,
+      phoneNo: action.payload.phoneNo,
+    };
+  },
 });
 
 export const orderReducer = createReducer(
