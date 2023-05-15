@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { Country, State } from "country-state-city";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 const Shipping = () => {
   const [hNO, setHNO] = useState("");
   const [city, setCity] = useState("");
@@ -8,8 +10,34 @@ const Shipping = () => {
   const [pinCode, setPinCode] = useState("");
   const [phoneNo, setPhoneNo] = useState("");
 
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const submitHandler = (e) => {
     e.preventDefault();
+    dispatch({
+      type: "addShippinginfo",
+      payload: {
+        hNO,
+        city,
+        country,
+        state,
+        pinCode,
+        phoneNo,
+      },
+    });
+
+    localStorage.setItem(
+      "shippingInfo",
+      JSON.stringify({
+        hNO,
+        city,
+        country,
+        state,
+        pinCode,
+        phoneNo,
+      })
+    );
+    navigate("/confirmorder");
   };
   return (
     <section className="shipping">
