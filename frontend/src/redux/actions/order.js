@@ -15,7 +15,7 @@ export const creatOrder = (
       type: "createOrderRequest",
     });
     const { data } = await axios.post(
-      `${server}/createorder`,
+      `${server}/createorderonline`,
       {
         shippingInfo,
         orderItems,
@@ -39,6 +39,44 @@ export const creatOrder = (
   } catch (error) {
     dispatch({
       type: "createOrderFail",
+      payload: error.response.data.message,
+    });
+  }
+};
+
+//paymentVerification**
+export const paymentVerification = (
+  razorpay_payment_id,
+  razorpay_order_id,
+  razorpay_signature,
+  orderOptions
+) => async (dispatch) => {
+  try {
+    dispatch({
+      type: "paymentVerificationRequest",
+    });
+    const { data } = await axios.post(
+      `${server}/paymentverification`,
+      {
+        razorpay_payment_id,
+        razorpay_order_id,
+        razorpay_signature,
+        orderOptions,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+    dispatch({
+      type: "paymentVerificationSuccess",
+      payload: data.message,
+    });
+  } catch (error) {
+    dispatch({
+      type: "paymentVerificationFail",
       payload: error.response.data.message,
     });
   }
