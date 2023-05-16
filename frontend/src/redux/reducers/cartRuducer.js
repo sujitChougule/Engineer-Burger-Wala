@@ -1,25 +1,37 @@
 import { createReducer } from "@reduxjs/toolkit";
 
 const intialReducer = {
-  cartItems: {
-    cheeseBurger: {
-      quantity: 0,
-      price: 200,
-    },
-    vegCheeseBurger: {
-      quantity: 0,
-      price: 500,
-    },
-    burgerWithFries: {
-      quantity: 0,
-      price: 1800,
-    },
-  },
-  subTotal: 0,
-  tax: 0,
-  total: 0,
-  shippingCharges: 0,
-  shippingInfo: {},
+  cartItems: localStorage.getItem("cartItems")
+    ? JSON.parse(localStorage.getItem("cartItems"))
+    : {
+        cheeseBurger: {
+          quantity: 0,
+          price: 200,
+        },
+        vegCheeseBurger: {
+          quantity: 0,
+          price: 500,
+        },
+        burgerWithFries: {
+          quantity: 0,
+          price: 1800,
+        },
+      },
+  subTotal: localStorage.getItem("cartPrices")
+    ? JSON.parse(localStorage.getItem("cartPrices")).subTotal
+    : 0,
+  tax: localStorage.getItem("cartPrices")
+    ? JSON.parse(localStorage.getItem("cartPrices")).tax
+    : 0,
+  total: localStorage.getItem("cartPrices")
+    ? JSON.parse(localStorage.getItem("cartPrices")).total
+    : 0,
+  shippingCharges: localStorage.getItem("cartPrices")
+    ? JSON.parse(localStorage.getItem("cartPrices")).shippingCharges
+    : 0,
+  shippingInfo: localStorage.getItem("shippingInfo")
+    ? JSON.parse(localStorage.getItem("shippingInfo"))
+    : {},
 };
 
 export const cartReducer = createReducer(intialReducer, {
@@ -100,6 +112,19 @@ export const orderReducer = createReducer(
       state.loading = false;
       state.error = action.payload;
     },
+
+    paymentVerificationRequest: (state) => {
+      state.loading = true;
+    },
+    paymentVerificationSuccess: (state, action) => {
+      state.loading = false;
+      state.message = action.payload;
+    },
+    paymentVerificationFail: (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
+
     clearMessage: (state) => {
       state.message = null;
     },

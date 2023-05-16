@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { creatOrder } from "../../redux/actions/order";
+import { creatOrder, paymentVerification } from "../../redux/actions/order";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { server } from "../../redux/store";
+
 const ConfirmOrder = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -19,7 +22,7 @@ const ConfirmOrder = () => {
   } = useSelector((state) => state.cart);
   const { message, error } = useSelector((state) => state.order);
 
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
     setDisableBtn(true);
     if (paymentMethod === "COD") {
@@ -35,6 +38,54 @@ const ConfirmOrder = () => {
         )
       );
     } else {
+      const {
+        data: { order, orderOptions },
+      } = await axios.post(
+        `${server}/createorderonline`,
+        {
+          shippingInfo,
+          orderItems: cartItems,
+          paymentMethod,
+          itemsPrice: subTotal,
+          taxPrice: tax,
+          shippingCharges,
+          totalAmount: total,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+      var options = {
+        key: "rzp_test_yQzWMgC9NokR4y", // Enter the Key ID generated from the Dashboard
+        amount: order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+        currency: "INR",
+        name: "Enginner BurgerWala", //your business name
+        description: "Order Transaction",
+        order_id: order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+        handler: function (response) {
+          const {
+            razorpay_payment_id,
+            razorpay_order_id,
+            razorpay_signature,
+          } = response;
+          dispatch(
+            paymentVerification(
+              razorpay_payment_id,
+              razorpay_order_id,
+              razorpay_signature,
+              orderOptions
+            )
+          );
+        },
+        theme: {
+          color: "#9c003c",
+        },
+      };
+      const razorpay = new window.Razorpay(options);
+      razorpay.open();
     }
   };
 
