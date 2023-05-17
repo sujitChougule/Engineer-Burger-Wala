@@ -97,39 +97,3 @@ export const cartReducer = createReducer(intialReducer, {
     };
   },
 });
-
-export const orderReducer = createReducer(
-  {},
-  {
-    createOrderRequest: (state) => {
-      state.loading = true;
-    },
-    createOrderSuccess: (state, action) => {
-      state.loading = false;
-      state.message = action.payload;
-    },
-    createOrderFail: (state, action) => {
-      state.loading = false;
-      state.error = action.payload;
-    },
-
-    paymentVerificationRequest: (state) => {
-      state.loading = true;
-    },
-    paymentVerificationSuccess: (state, action) => {
-      state.loading = false;
-      state.message = action.payload;
-    },
-    paymentVerificationFail: (state, action) => {
-      state.loading = false;
-      state.error = action.payload;
-    },
-
-    clearMessage: (state) => {
-      state.message = null;
-    },
-    clearError: (state) => {
-      state.error = null;
-    },
-  }
-);
