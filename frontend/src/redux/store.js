@@ -3,13 +3,14 @@ import { authReducer } from "./reducers/userReducer";
 import { cartReducer } from "./reducers/cartRuducer";
 import { orderReducer } from "./reducers/orderReducer";
 import { ordersReducer } from "./reducers/orderReducer";
-
+import { adminReducer } from "./reducers/adminReducer";
 const store = configureStore({
   reducer: {
     auth: authReducer,
     cart: cartReducer,
     order: orderReducer,
     orders: ordersReducer,
+    admin: adminReducer,
   },
 });
 

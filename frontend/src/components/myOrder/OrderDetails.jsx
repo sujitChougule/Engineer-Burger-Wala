@@ -1,115 +1,126 @@
 import React, { useEffect } from "react";
-import { getOrdersDetails } from "../../redux/actions/order";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-
+import { getOrdersDetails } from "../../redux/actions/order";
+import Loader from "../layout/Loader";
 const OrderDetails = () => {
   const params = useParams();
+
   const { order, loading } = useSelector((state) => state.orders);
+
   const dispatch = useDispatch();
+
   useEffect(() => {
     dispatch(getOrdersDetails(params.id));
   }, [params.id, dispatch]);
 
   return (
     <section className="orderDetails">
-      <main>
-        <h1>Order Details</h1>
+      {loading === false && order !== undefined ? (
+        <main>
+          <h1>Order Details</h1>
 
-        <div>
-          <h1>Shipping</h1>
-          <p>
-            <b>Address</b>
-            {}
-          </p>
-        </div>
-
-        <div>
-          <h1>Constact</h1>
-          <p>
-            <b>Name</b>
-            {"Sujit"}
-          </p>
-          <p>
-            <b>Phone</b>
-            {"9987676720"}
-          </p>
-        </div>
-
-        <div>
-          <h1>Status</h1>
-          <p>
-            <b>Order Status</b>
-            {"Processing"}
-          </p>
-          <p>
-            <b>Placed At</b>
-            {"01-2-2023"}
-          </p>
-          <p>
-            <b>Delivered At</b>
-            {"05-2-2023"}
-          </p>
-        </div>
-
-        <div>
-          <h1>Payment</h1>
-          <p>
-            <b>Payment Method</b>
-            {"Online"}
-          </p>
-          <p>
-            <b>Payment Reference</b>#{"598752095945"}
-          </p>
-          <p>
-            <b>Paid At</b>
-            {"01-2-2023"}
-          </p>
-        </div>
-
-        <div>
-          <h1>Amount</h1>
-          <p>
-            <b>Items Total</b>₹{32323}
-          </p>
-          <p>
-            <b>Shipping charges</b>₹{200}
-          </p>
-          <p>
-            <b>Tax</b>₹{2322}
-          </p>
-          <p>
-            <b>Total Amount</b>₹{34343}
-          </p>
-        </div>
-
-        <article>
-          <h1>Ordered Items</h1>
           <div>
-            <h4>Cheese Burger</h4>
-            <div>
-              <span>{12}</span> x <span>{232}</span>
-            </div>
+            <h1>Shipping</h1>
+            <p>
+              <b>Address</b>
+              {`${order.shippingInfo.hNo} ${order.shippingInfo.city} ${order.shippingInfo.country} ${order.shippingInfo.pinCode}`}
+            </p>
           </div>
 
           <div>
-            <h4>Veg Cheese Burger</h4>
-            <div>
-              <span>{10}</span> x <span>{299}</span>
-            </div>
+            <h1>Constact</h1>
+            <p>
+              <b>Name</b>
+              {order.user.name}
+            </p>
+            <p>
+              <b>Phone</b>
+              {order.shippingInfo.phoneNo}
+            </p>
           </div>
 
           <div>
-            <h4>Cheese Burger with french fries</h4>
-            <div>
-              <span>{7}</span> x <span>{799}</span>
-            </div>
+            <h1>Status</h1>
+            <p>
+              <b>Order Status</b>
+              {order.orderStatus}
+            </p>
+            <p>
+              <b>Placed At</b>
+              {order.createdAt.split("T")[0]}
+            </p>
+            <p>
+              <b>Delivered At</b>
+              {order.deliveredAt ? order.deliveredAt.split("T")[0] : "NA"}
+            </p>
           </div>
 
-          <h4 style={{ fontWeight: 800 }}>Sub Total</h4>
-          <div style={{ fontWeight: 800 }}>₹{2133}</div>
-        </article>
-      </main>
+          <div>
+            <h1>Payment</h1>
+            <p>
+              <b>Payment Method</b>
+              {order.paymentMethod}
+            </p>
+            <p>
+              <b>Payment Reference</b>
+              {order.paymentInfo ? `#${order.paymentInfo}` : "NA"}
+            </p>
+            <p>
+              <b>Paid At</b>
+              {order.paidAt ? order.paidAt.split("T")[0] : "NA"}
+            </p>
+          </div>
+
+          <div>
+            <h1>Amount</h1>
+            <p>
+              <b>Items Total</b>₹{order.itemsPrice}
+            </p>
+            <p>
+              <b>Shipping charges</b>₹{order.shippingCharges}
+            </p>
+            <p>
+              <b>Tax</b>₹{order.taxPrice}
+            </p>
+            <p>
+              <b>Total Amount</b>₹{order.totalAmount}
+            </p>
+          </div>
+
+          <article>
+            <h1>Ordered Items</h1>
+            <div>
+              <h4>Cheese Burger</h4>
+              <div>
+                <span>{order.orderItems.cheeseBurger.quantity}</span> x{" "}
+                <span>{order.orderItems.cheeseBurger.price}</span>
+              </div>
+            </div>
+
+            <div>
+              <h4>Veg Cheese Burger</h4>
+              <div>
+                <span>{order.orderItems.vegCheeseBurger.quantity}</span> x{" "}
+                <span>{order.orderItems.vegCheeseBurger.price}</span>
+              </div>
+            </div>
+
+            <div>
+              <h4>Cheese Burger with french fries</h4>
+              <div>
+                <span>{order.orderItems.burgerWithFries.quantity}</span> x{" "}
+                <span>{order.orderItems.burgerWithFries.price}</span>
+              </div>
+            </div>
+
+            <h4 style={{ fontWeight: 800 }}>Sub Total</h4>
+            <div style={{ fontWeight: 800 }}>₹{order.itemsPrice}</div>
+          </article>
+        </main>
+      ) : (
+        <Loader />
+      )}
     </section>
   );
 };
