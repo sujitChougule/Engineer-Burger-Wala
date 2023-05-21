@@ -19,22 +19,26 @@ const Box = ({ title, value }) => (
 );
 const Dashboard = () => {
   const dispatch = useDispatch();
-  const { loading, usersCount, ordersCount, totalIncome } = useSelector(
-    (state) => state.admin
-  );
+  const {
+    loading,
+    usersCount,
+    ordersCount,
+    prepairing,
+    shipped,
+    delivered,
+    totalIncome,
+  } = useSelector((state) => state.admin);
 
   useEffect(() => {
     dispatch(getAdminStats());
   }, [dispatch]);
-
+  // console.log(ordersCount.prepairing);
   const data = {
     labels: ["Prepairing", "Shipped", "Delivered"],
     datasets: [
       {
         label: "# of orders",
-        data: ordersCount
-          ? [ordersCount.preparing, ordersCount.shipped, ordersCount.delivered]
-          : [0, 0, 0],
+        data: ordersCount ? [prepairing, shipped, delivered] : [0, 0, 0],
         backgroundColor: [
           "rgba(150,63,176,0.1)",
           "rgba(78,63,176,0.2)",

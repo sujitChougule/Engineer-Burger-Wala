@@ -8,6 +8,10 @@ export const adminReducer = createReducer(
     },
     getAdminStatsSuccess: (state, action) => {
       state.loading = false;
+      state.shipped = action.payload.shipped;
+      state.delivered = action.payload.delivered;
+
+      state.prepairing = action.payload.prepairing;
       state.usersCount = action.payload.usersCount;
       state.ordersCount = [action.payload.ordersCount];
       state.totalIncome = action.payload.totalIncome;
@@ -34,11 +38,29 @@ export const adminReducer = createReducer(
     },
     getAdminOrdersSuccess: (state, action) => {
       state.loading = false;
-      state.orders = action.payload;
+      state.order = action.payload;
     },
     getAdminOrdersFail: (state, action) => {
       state.loading = false;
       state.error = action.payload;
+    },
+    //processing orders
+    processOrderRequest: (state) => {
+      state.loading = true;
+    },
+    processOrderSuccess: (state, action) => {
+      state.loading = false;
+      state.message = action.payload;
+    },
+    processOrderFail: (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
+    clearError: (state) => {
+      state.error = null;
+    },
+    clearMessage: (state) => {
+      state.message = null;
     },
   }
 );
