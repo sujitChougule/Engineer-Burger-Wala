@@ -1,45 +1,54 @@
-import React from 'react'
-import {Link} from 'react-router-dom';
-import {AiOutlineEye} from 'react-icons/ai'
-import me from "../../assets/founder.png"
+import React from "react";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getAdminUsers } from "../../redux/actions/admin";
+import Loader from "../layout/Loader";
+
 const Users = () => {
-  const arr=[1,2,3,4];
+  const dispatch = useDispatch();
+
+  const { loading, users } = useSelector((state) => state.admin);
+
+  useEffect(() => {
+    dispatch(getAdminUsers());
+  }, [dispatch]);
 
   return (
-    <section className='tableClass'>
+    <section className="tableClass">
+      {loading === false ? (
         <main>
-            <table>
-                <thead>
-                    <tr>
-                        <th>User Id</th>
-                        <th>Name</th>
-                        <th>Photo</th>
-                        <th>Role</th>
-                        <th>Payment Method</th>
-                        <th>Since</th>                        
-                    </tr>
-                </thead>
+          <table>
+            <thead>
+              <tr>
+                <th>User Id</th>
+                <th>Name</th>
+                <th>Photo</th>
+                <th>Role</th>
+                <th>Since</th>
+              </tr>
+            </thead>
 
-                <tbody>
-                    {arr.map(i=>(
-                    <tr>
-                    <td>#skfjvnslfnv</td>
-                    <td>Sujit</td>
+            <tbody>
+              {users &&
+                users.map((i) => (
+                  <tr key={i._id}>
+                    <td>#{i._id}</td>
+                    <td>{i.name}</td>
                     <td>
-                      <img src={me} alt='user'/>
+                      <img src={i.photo} alt="User" />
                     </td>
-                    <td>Admin</td> 
-                    <td>{"24-23-2023"}</td>                       
-                    <td>
-                        <Link to={`/order/${"scdsksc"}`}><AiOutlineEye/></Link>
-                    </td>
-                </tr>
-                    ))}
-                </tbody>
-            </table>
+                    <td>{i.role}</td>
+                    <td>{i.createdAt.split("T")[0]}</td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
         </main>
+      ) : (
+        <Loader />
+      )}
     </section>
-  )
-}
+  );
+};
 
-export default Users
+export default Users;

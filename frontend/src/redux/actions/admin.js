@@ -42,22 +42,37 @@ export const getAdminUsers = () => async (dispatch) => {
   }
 };
 
-//for admin orders
+//for admin orders /admin/orders
 export const getAdminOrders = () => async (dispatch) => {
   try {
-    dispatch({
-      type: "getAdminOrdersRequest",
-    });
+    dispatch({ type: "getAdminOrdersRequest" });
+
     const { data } = await axios.get(`${server}/admin/orders`, {
       withCredentials: true,
     });
-    dispatch({
-      type: "getAdminOrdersSuccess",
-      payload: data.orders,
-    });
+
+    dispatch({ type: "getAdminOrdersSuccess", payload: data.order });
   } catch (error) {
     dispatch({
       type: "getAdminOrdersFail",
+      payload: error.response.data.message,
+    });
+  }
+};
+///processing orders
+
+export const processOrder = (id) => async (dispatch) => {
+  try {
+    dispatch({ type: "processOrderRequest" });
+
+    const { data } = await axios.get(`${server}/admin/order/${id}`, {
+      withCredentials: true,
+    });
+
+    dispatch({ type: "processOrderSuccess", payload: data.message });
+  } catch (error) {
+    dispatch({
+      type: "processOrderFail",
       payload: error.response.data.message,
     });
   }
