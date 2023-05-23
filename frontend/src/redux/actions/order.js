@@ -15,7 +15,7 @@ export const creatOrder = (
       type: "createOrderRequest",
     });
     const { data } = await axios.post(
-      `${server}/createorderonline`,
+      `${server}/createorder`,
       {
         shippingInfo,
         orderItems,
